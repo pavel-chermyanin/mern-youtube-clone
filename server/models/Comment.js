@@ -4,7 +4,7 @@ const CommentSchema = new mongoose.Schema(
   {
     userId: {
       type: String,
-      unique: true,
+      required: true,
     },
     videoId: {
       type: String,
@@ -14,7 +14,6 @@ const CommentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
   },
   { timestamps: true }
 );
