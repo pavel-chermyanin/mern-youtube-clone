@@ -17,6 +17,7 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import SettingsBrightnessOutlinedIcon from "@mui/icons-material/SettingsBrightnessOutlined";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
   flex: 2;
@@ -83,10 +84,12 @@ const Menu = ({ darkMode, setDarkMode }) => {
   return (
     <Container>
       <Wrapper>
-        <LogoBlock>
-          <Img src={logo} />
-          PavelTube
-        </LogoBlock>
+        <Link to='/' style={{textDecoration: 'none', color: 'inherit'}}>
+          <LogoBlock>
+            <Img src={logo} />
+            PavelTube
+          </LogoBlock>
+        </Link>
         <Item>
           <HomeIcon />
           Home
@@ -117,9 +120,7 @@ const Menu = ({ darkMode, setDarkMode }) => {
           </Button>
         </Login>
         <Hr />
-        <Title>
-          BEST OF PAVETUBE
-        </Title>
+        <Title>BEST OF PAVETUBE</Title>
         <Item>
           <VideoLibraryOutlinedIcon />
           Music
@@ -159,7 +160,7 @@ const Menu = ({ darkMode, setDarkMode }) => {
         </Item>
         <Item onClick={() => setDarkMode(!darkMode)}>
           <SettingsBrightnessOutlinedIcon />
-          Light Mode
+          {darkMode ? 'Light ': 'Dark '}Mode
         </Item>
       </Wrapper>
     </Container>

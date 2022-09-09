@@ -5,6 +5,8 @@ import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Menu from "./components/Menu";
 import NavBar from "./components/NavBar";
+import Home from "./pages/Home";
+import Video from "./pages/Video";
 
 const Container = styled.div`
   display: flex;
@@ -16,7 +18,7 @@ const Main = styled.div`
   background-color: ${({ theme }) => theme.bg};
 `;
 const Wrapper = styled.div`
-  padding: 22px 96px;
+  padding: 22px 0;
 `;
 
 function App() {
@@ -29,35 +31,14 @@ function App() {
           <Main>
             <NavBar darkMode={darkMode} />
             <Wrapper>
-              <h1>test</h1>
-              <h1>test</h1>
-              <h1>test</h1>
-              <h1>test</h1>
-              <h1>test</h1>
-              <h1>test</h1>
-              <h1>test</h1>
-              <h1>test</h1>
-              <h1>test</h1>
-              <h1>test</h1>
-              <h1>test</h1>
-              <h1>test</h1>
-              <h1>test</h1>
-              <h1>test</h1>
-              <h1>test</h1>
-              <h1>test</h1>
-              <h1>test</h1>
-              <h1>test</h1>
-              <h1>test</h1>
-              <h1>test</h1>
-              <h1>test</h1>
-              <h1>test</h1>
-              <h1>test</h1>
-              <h1>test</h1>
-              <h1>test</h1>
-              <h1>test</h1>
-              <h1>test</h1>
-              <h1>test</h1>
-              <h1>test</h1>
+              <Routes>
+                <Route path="/">
+                  <Route index element={<Home/>} />
+                  <Route path="video">
+                    <Route path=":id" element={<Video/>} />
+                  </Route>
+                </Route>
+              </Routes>
             </Wrapper>
           </Main>
         </Container>

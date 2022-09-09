@@ -36,21 +36,20 @@ const Input = styled.input`
   border: none;
   background-color: transparent;
   outline: none;
+  color: ${({ theme }) => theme.text};
 `;
 const ButtonMenu = styled(Button)`
   margin-top: 0;
 `;
 
 
-const NavBar = ({ darkMode }) => {
+const NavBar = () => {
   return (
     <Container>
       <Wrapper>
         <Search>
           <Input placeholder="Search" />
-          <SearchOutlinedIcon style={{
-            fill: `${darkMode ? 'white': 'black'}`
-          }}/>
+          <SearchOutlinedIcon />
         </Search>
         <ButtonMenu>
           <AccountCircleOutlinedIcon />
