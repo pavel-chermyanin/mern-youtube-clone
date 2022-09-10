@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import logo from "../img/youtube-logo.png";
 import HomeIcon from "@mui/icons-material/Home";
@@ -17,10 +17,12 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import SettingsBrightnessOutlinedIcon from "@mui/icons-material/SettingsBrightnessOutlined";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   flex: 2;
+  flex-grow: 1;
+  min-width: 200px;
   background-color: ${({ theme }) => theme.bg};
   height: 100vh;
   color: ${({ theme }) => theme.text};
@@ -28,9 +30,19 @@ const Container = styled.div`
   position: sticky;
   top: 0;
   overflow-y: scroll;
+  transition: all 0.3s ease-in-out;
+  @media (max-width: 1024px) {
+    position: fixed;
+    z-index: 1;
+    transform: ${(props) =>
+      props.isOpen ? "translateX(0)" : "translateX(-150%)"};
+  }
+  @media (max-width: 450px) {
+    width: 280px;
+  }
 `;
 const Wrapper = styled.div`
-  padding: 18px 26px;
+  padding: 15px 20px;
 `;
 const LogoBlock = styled.div`
   display: flex;
@@ -38,6 +50,9 @@ const LogoBlock = styled.div`
   gap: 5px;
   font-weight: bold;
   margin-bottom: 25px;
+  @media (max-width: 1024px) {
+    margin-bottom: 0;
+  }
 `;
 
 const Img = styled.img`
@@ -49,7 +64,10 @@ const Item = styled.div`
   align-items: center;
   gap: 20px;
   cursor: pointer;
-  padding: 7.5px 0;
+  padding: 7.5px 10px;
+  &:hover {
+    background-color: ${({ theme }) => theme.soft};
+  }
 `;
 
 const Hr = styled.hr`
@@ -77,31 +95,93 @@ const Title = styled.h2`
   font-weight: 500;
   color: #aaaaaa;
   margin-bottom: 20px;
-  
+`;
+const MenuButton = styled.div`
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 18px;
+  width: 24px;
+  margin-right: 30px;
+  margin-left: 10px;
+  display: none;
+
+  span {
+    width: 100%;
+    height: 2px;
+    background-color: ${({ theme }) => theme.textSoft};
+  }
+  @media (max-width: 1024px) {
+    display: flex;
+  }
+
+`;
+const WrapperTop = styled.div`
+  display: flex;
+  align-items: center;
+  @media (max-width: 1024px) {
+    margin-bottom: 20px;
+  }
 `;
 
-const Menu = ({ darkMode, setDarkMode }) => {
+const Menu = ({ darkMode, setDarkMode, isOpenMenu, setIsOpenMenu }) => {
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const hideMenu = (e) => {
+
+      if (
+        (isOpenMenu &&
+          menuRef.current &&
+          !menuRef.current.contains(e.target)) ||
+        e.target.classList.contains(Item.styledComponentId)
+      ) {
+        setIsOpenMenu(false);
+      }
+    };
+
+    document.body.addEventListener("click", hideMenu);
+    return () => document.body.removeEventListener("click", hideMenu);
+  }, [isOpenMenu]);
+
   return (
-    <Container>
+    <Container isOpen={isOpenMenu} ref={menuRef}>
       <Wrapper>
-        <Link to='/' style={{textDecoration: 'none', color: 'inherit'}}>
-          <LogoBlock>
-            <Img src={logo} />
-            PavelTube
-          </LogoBlock>
+        <WrapperTop>
+          <MenuButton
+            onClick={(e) => {
+              setIsOpenMenu(false);
+            }}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </MenuButton>
+          <Link to="/">
+            <LogoBlock>
+              <Img src={logo} />
+              PavelTube
+            </LogoBlock>
+          </Link>
+        </WrapperTop>
+        <Link to="/">
+          <Item>
+            <HomeIcon />
+            Home
+          </Item>
         </Link>
-        <Item>
-          <HomeIcon />
-          Home
-        </Item>
-        <Item>
-          <ExploreOutlinedIcon />
-          Explore
-        </Item>
-        <Item>
-          <SubscriptionsOutlinedIcon />
-          Subcriptions
-        </Item>
+        <Link to="trend">
+          <Item>
+            <ExploreOutlinedIcon />
+            Explore
+          </Item>
+        </Link>
+        <Link to="subscriptions">
+          <Item>
+            <SubscriptionsOutlinedIcon />
+            Subcriptions
+          </Item>
+        </Link>
         <Hr />
         <Item>
           <LibraryMusicOutlinedIcon />
@@ -114,10 +194,12 @@ const Menu = ({ darkMode, setDarkMode }) => {
         <Hr />
         <Login>
           Sign in to like videos, comment and subscribe
-          <Button>
-            <AccountCircleOutlinedIcon />
-            SIGN IN
-          </Button>
+          <Link to="signin">
+            <Button>
+              <AccountCircleOutlinedIcon />
+              SIGN IN
+            </Button>
+          </Link>
         </Login>
         <Hr />
         <Title>BEST OF PAVETUBE</Title>
@@ -160,7 +242,7 @@ const Menu = ({ darkMode, setDarkMode }) => {
         </Item>
         <Item onClick={() => setDarkMode(!darkMode)}>
           <SettingsBrightnessOutlinedIcon />
-          {darkMode ? 'Light ': 'Dark '}Mode
+          {darkMode ? "Light " : "Dark "}Mode
         </Item>
       </Wrapper>
     </Container>

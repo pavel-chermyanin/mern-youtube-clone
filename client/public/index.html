@@ -20,9 +20,16 @@
     />
     <title>React App</title>
     <style>
-      * {
+      *,
+      *::before,
+      *::after {
         margin: 0;
         font-family: "Roboto", sans-serif;
+        box-sizing: border-box;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
       }
     </style>
   </head>

@@ -18,8 +18,10 @@ const Container = styled.div`
 `;
 const Content = styled.div`
   flex: 5;
+  /* flex-grow:0; */
 `;
-const VideoWrapper = styled.div``;
+const VideoWrapper = styled.div`
+width: 100%;`;
 const Title = styled.h1`
   font-size: 18px;
   font-weight: 400;
@@ -56,7 +58,8 @@ const Button = styled.div`
 `;
 
 const Recommendation = styled.div`
-  flex: 2;
+  flex: 4;
+  
 `;
 const Channel = styled.div`
   display: flex;
