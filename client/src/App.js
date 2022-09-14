@@ -13,35 +13,34 @@ const Container = styled.div`
   display: flex;
   min-height: 100vh;
   flex-grow: 1;
-  &::before{
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    content: "";
-    position: fixed;
-    background-color: rgba(0,0,0, .7);
-    display:${(props) => props.isOpen ? 'block': 'none'};
-  }
+  position: relative;
+`;
+
+const DarkLayer = styled.div`
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  content: "";
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.7);
 `;
 
 const Main = styled.div`
+  position: relative;
   flex: 5;
-  /* flex-direction: column; */
   background-color: #181818;
   background-color: ${({ theme }) => theme.bg};
-  `;
+`;
 
 const Wrapper = styled.div`
-flex-grow: 0;
+  flex-grow: 0;
   padding: 22px 0;
 `;
 
 function App() {
   const [darkMode, setDarkMode] = useState(true);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
-
-
 
   return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
@@ -75,6 +74,7 @@ function App() {
               </Routes>
             </Wrapper>
           </Main>
+          {isOpenMenu && <DarkLayer />}
         </Container>
       </BrowserRouter>
     </ThemeProvider>

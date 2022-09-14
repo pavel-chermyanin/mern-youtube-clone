@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import {format} from 'timeago.js'
+import { format } from "timeago.js";
 
 const Container = styled.div`
   margin-bottom: ${(props) => (props.type === "sm" ? "10px" : "45px")};
@@ -14,9 +14,9 @@ const Container = styled.div`
 const Image = styled.img`
   height: ${(props) => (props.type === "sm" ? "120px" : "150px")};
   width: 100%;
-  min-width: ${(props) => (props.type === "sm" && "150px")};
-  max-width: ${(props) => (props.type === "sm" && "200px")};
-  
+  min-width: ${(props) => props.type === "sm" && "150px"};
+  max-width: ${(props) => props.type === "sm" && "200px"};
+
   cursor: pointer;
 `;
 
@@ -29,6 +29,7 @@ const Details = styled.div`
 `;
 
 export const ChannelImage = styled.img`
+  flex-shrink: 0;
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -54,27 +55,31 @@ const Info = styled.div`
   color: ${({ theme }) => theme.textSoft};
 `;
 
-const Card = ({ type,video }) => {
-    const [channel, setChannel] = useState({});
+const Card = ({ type, video }) => {
+  const [channel, setChannel] = useState({});
 
-    useEffect(() => {
-      const fetchChannel = async (id) => {
+  useEffect(() => {
+    const fetchChannel = async (id) => {
+      try {
         const res = await axios.get(`/users/find/${id}`);
         setChannel(res.data);
-      };
-      fetchChannel(video.userId);
-    }, [type]);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchChannel(video?.userId);
+  }, [type]);
   return (
-    <Link to="/video/test" style={{ textDecoration: "none" }}>
+    <Link to={`/video/${video?._id}`} style={{ textDecoration: "none" }}>
       <Container type={type}>
-        <Image type={type} src={video.imgUrl} />
+        <Image type={type} src={video?.imgUrl} />
         <Details type={type}>
           <ChannelImage type={type} src={channel.img} />
           <Texts type={type}>
-            <Title>{video.title}</Title>
+            <Title>{video?.title}</Title>
             <ChannelName>{channel.name}</ChannelName>
             <Info>
-              {video.views} views {format(video.createdAt)}
+              {video?.views} views {format(video?.createdAt)}
             </Info>
           </Texts>
         </Details>

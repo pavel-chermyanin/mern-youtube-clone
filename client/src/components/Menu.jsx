@@ -18,6 +18,7 @@ import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import SettingsBrightnessOutlinedIcon from "@mui/icons-material/SettingsBrightnessOutlined";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Container = styled.div`
   flex: 2;
@@ -114,7 +115,6 @@ const MenuButton = styled.div`
   @media (max-width: 1024px) {
     display: flex;
   }
-
 `;
 const WrapperTop = styled.div`
   display: flex;
@@ -126,10 +126,10 @@ const WrapperTop = styled.div`
 
 const Menu = ({ darkMode, setDarkMode, isOpenMenu, setIsOpenMenu }) => {
   const menuRef = useRef(null);
+  const { user } = useSelector((state) => state.user);
 
   useEffect(() => {
     const hideMenu = (e) => {
-
       if (
         (isOpenMenu &&
           menuRef.current &&
@@ -142,6 +142,11 @@ const Menu = ({ darkMode, setDarkMode, isOpenMenu, setIsOpenMenu }) => {
 
     document.body.addEventListener("click", hideMenu);
     return () => document.body.removeEventListener("click", hideMenu);
+  }, [isOpenMenu]);
+
+  useEffect(() => {
+    if (isOpenMenu) document.body.style.overflowY = "hidden";
+    return () => document.body.style.overflowY = "auto";
   }, [isOpenMenu]);
 
   return (
@@ -192,16 +197,20 @@ const Menu = ({ darkMode, setDarkMode, isOpenMenu, setIsOpenMenu }) => {
           History
         </Item>
         <Hr />
-        <Login>
-          Sign in to like videos, comment and subscribe
-          <Link to="signin">
-            <Button>
-              <AccountCircleOutlinedIcon />
-              SIGN IN
-            </Button>
-          </Link>
-        </Login>
-        <Hr />
+        {!user && (
+          <>
+            <Login>
+              Sign in to like videos, comment and subscribe
+              <Link to="signin">
+                <Button>
+                  <AccountCircleOutlinedIcon />
+                  SIGN IN
+                </Button>
+              </Link>
+            </Login>
+            <Hr />
+          </>
+        )}
         <Title>BEST OF PAVETUBE</Title>
         <Item>
           <VideoLibraryOutlinedIcon />

@@ -1,4 +1,6 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { ChannelImage } from "./Card";
 import Comment from "./Comment";
@@ -20,16 +22,28 @@ const Input = styled.input`
   color: ${({ theme }) => theme.text};
 `;
 
-const Comments = () => {
+const Comments = ({ videoId }) => {
+  const { user } = useSelector((state) => state.user);
+  const [comments, setComments] = useState([]);
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const res = await axios.get(`/comments/${videoId}`);
+        setComments(res.data);
+      } catch (error) {}
+    };
+    fetchComments();
+  }, [videoId]);
   return (
     <Container>
       <NewComment>
-        <Avatar src="https://pixelbox.ru/wp-content/uploads/2021/03/ava-instagram-48.jpg" />
+        <Avatar src={user.img} />
         <Input placeholder="Add a comment..." />
       </NewComment>
-      <Comment/>
-      <Comment/>
-      <Comment/>
+      {comments.map((comment) => (
+        <Comment comment={comment} key={comment._id} />
+      ))}
     </Container>
   );
 };

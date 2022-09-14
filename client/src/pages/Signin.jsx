@@ -1,5 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { loginFailure, loginStart, loginSuccess } from "../redux/userSlice";
+import { auth, provider } from "../firebase";
+import { signInWithPopup } from "firebase/auth";
+import { async } from "@firebase/util";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -31,6 +38,7 @@ const Input = styled.input`
   background-color: transparent;
   border: 1px solid ${({ theme }) => theme.soft};
   width: 100%;
+  color: ${({ theme }) => theme.text};
 `;
 const Button = styled.button`
   border: none;
@@ -55,9 +63,46 @@ const Link = styled.span`
 `;
 
 const Signin = () => {
-  const [name,setName] = useState('')
-  const [email,setEmail] = useState('')
-  const [password,setPassword] = useState('')
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    dispatch(loginStart());
+    try {
+      const res = await axios.post("/auth/signin", {
+        name,
+        password,
+      });
+      dispatch(loginSuccess(res.data));
+      navigate('/')
+    } catch (error) {
+      dispatch(loginFailure());
+    }
+  };
+
+  const signInWithGoogle = async () => {
+    dispatch(loginStart());
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        axios
+          .post("/auth/google", {
+            name: result.user.displayName,
+            email: result.user.email,
+            img: result.user.photoURL,
+          })
+          .then((res) => {
+            dispatch(loginSuccess(res.data));
+            navigate("/");
+          });
+      })
+      .catch((err) => {
+        dispatch(loginFailure());
+      });
+  };
   return (
     <Container>
       <Wrapper>
@@ -72,7 +117,9 @@ const Signin = () => {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="password"
         />
-        <Button>Log in</Button>
+        <Button onClick={handleLogin}>Log in</Button>
+        <Title>or</Title>
+        <Button onClick={signInWithGoogle}>Signin with Google</Button>
         <Title>or</Title>
         <Input
           placeholder="username"

@@ -16,8 +16,12 @@ const Home = ({type}) => {
 
   useEffect(() => {
     const fetchVideos = async () => {
-      const res = await axios.get(`/videos/${type}`);
-      setVideos(res.data);
+      try {
+        const res = await axios.get(`/videos/${type}`);
+        setVideos(res.data);
+      } catch (error) {
+        console.log(error);
+      }
     };
     fetchVideos();
   }, [type]);

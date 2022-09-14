@@ -1,4 +1,5 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { ChannelImage } from "./Card";
 
@@ -30,19 +31,26 @@ const Text = styled.p`
   
 `;
 
-const Comment = () => {
+const Comment = ({comment}) => {
+  const [channel, setChannel] = useState({})
+  
+  useEffect(() => {
+    const fetchComment = async () => {
+      const res = await axios.get(`/users/find/${comment.userId}`);
+      setChannel(res.data);
+    };
+    fetchComment();
+  }, [comment.userId]);
   return (
     <Container>
-      <Avatar src="https://pixelbox.ru/wp-content/uploads/2021/03/ava-instagram-48.jpg" />
+      <Avatar src={channel.img} />
       <Details>
         <Name>
-          Pave dev <Date>1 day ago</Date>
+          {channel.name}<Date>1 day ago</Date>
         </Name>
 
         <Text>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis optio
-          ratione eius illum sapiente earum consequuntur tenetur dolor!
-          Perferendis, consequuntur{" "}
+          {comment.desc}
         </Text>
       </Details>
     </Container>
